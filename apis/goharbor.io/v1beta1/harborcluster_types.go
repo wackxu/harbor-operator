@@ -12,6 +12,7 @@ const (
 	KindDatabaseZlandoPostgreSQL = "Zlando/PostgreSQL"
 	KindDatabasePostgreSQL       = "PostgreSQL"
 	KindStorageOss               = "Oss"
+	KindStorageObs               = "Obs"
 	KindStorageGcs               = "Gcs"
 	KindStorageAzure             = "Azure"
 	KindStorageMinIO             = "MinIO"
@@ -221,7 +222,7 @@ type ZlandoPostgreSQLSpec struct {
 
 type Storage struct {
 	// Kind of which storage service to be used. Only support MinIO now.
-	// +kubebuilder:validation:Enum={MinIO,S3,Swift,FileSystem,Azure,Gcs,Oss}
+	// +kubebuilder:validation:Enum={MinIO,S3,Swift,FileSystem,Azure,Gcs,Oss,Obs}
 	Kind string `json:"kind"`
 
 	Spec StorageSpec `json:"spec"`
@@ -244,6 +245,8 @@ type StorageSpec struct {
 	Gcs *GcsSpec `json:"gcs,omitempty"`
 	// +kubebuilder:validation:Optional
 	Oss *OssSpec `json:"oss,omitempty"`
+	// +kubebuilder:validation:Optional
+	Obs *ObsSpec `json:"obs,omitempty"`
 	// Determine if the redirection of minio storage is disabled.
 	// +kubebuilder:validation:Optional
 	Redirect *StorageRedirectSpec `json:"redirect,omitempty"`
@@ -276,6 +279,10 @@ type GcsSpec struct {
 
 type OssSpec struct {
 	HarborStorageImageChartStorageOssSpec `json:",inline"`
+}
+
+type ObsSpec struct {
+	HarborStorageImageChartStorageObsSpec `json:",inline"`
 }
 
 type SwiftSpec struct {

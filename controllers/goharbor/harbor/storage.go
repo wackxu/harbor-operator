@@ -14,6 +14,12 @@ func (r *Reconciler) ChartMuseumStorage(ctx context.Context, harbor *goharborv1.
 		}
 	}
 
+	if harbor.Spec.ImageChartStorage.Obs != nil {
+		return goharborv1.ChartMuseumChartStorageDriverSpec{
+			Obs: harbor.Spec.ImageChartStorage.Obs.ChartMuseum(),
+		}
+	}
+
 	if harbor.Spec.ImageChartStorage.Swift != nil {
 		return goharborv1.ChartMuseumChartStorageDriverSpec{
 			OpenStack: harbor.Spec.ImageChartStorage.Swift.ChartMuseum(),
@@ -114,6 +120,12 @@ func (r *Reconciler) RegistryStorage(ctx context.Context, harbor *goharborv1.Har
 	if harbor.Spec.ImageChartStorage.S3 != nil {
 		return goharborv1.RegistryStorageDriverSpec{
 			S3: harbor.Spec.ImageChartStorage.S3.Registry(),
+		}
+	}
+
+	if harbor.Spec.ImageChartStorage.Obs != nil {
+		return goharborv1.RegistryStorageDriverSpec{
+			Obs: harbor.Spec.ImageChartStorage.Obs.Registry(),
 		}
 	}
 

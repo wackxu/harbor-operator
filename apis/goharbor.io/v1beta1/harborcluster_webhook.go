@@ -53,6 +53,7 @@ func (harborcluster *HarborCluster) Default() { //nolint:funlen
 	switch harborcluster.Spec.Storage.Kind {
 	case KindStorageFileSystem:
 		harborcluster.Spec.Storage.Spec.Oss = nil
+		harborcluster.Spec.Storage.Spec.Obs = nil
 		harborcluster.Spec.Storage.Spec.Gcs = nil
 		harborcluster.Spec.Storage.Spec.Azure = nil
 		harborcluster.Spec.Storage.Spec.S3 = nil
@@ -60,6 +61,7 @@ func (harborcluster *HarborCluster) Default() { //nolint:funlen
 		harborcluster.Spec.Storage.Spec.MinIO = nil
 	case KindStorageS3:
 		harborcluster.Spec.Storage.Spec.Oss = nil
+		harborcluster.Spec.Storage.Spec.Obs = nil
 		harborcluster.Spec.Storage.Spec.Gcs = nil
 		harborcluster.Spec.Storage.Spec.Azure = nil
 		harborcluster.Spec.Storage.Spec.FileSystem = nil
@@ -67,6 +69,7 @@ func (harborcluster *HarborCluster) Default() { //nolint:funlen
 		harborcluster.Spec.Storage.Spec.MinIO = nil
 	case KindStorageSwift:
 		harborcluster.Spec.Storage.Spec.Oss = nil
+		harborcluster.Spec.Storage.Spec.Obs = nil
 		harborcluster.Spec.Storage.Spec.Gcs = nil
 		harborcluster.Spec.Storage.Spec.Azure = nil
 		harborcluster.Spec.Storage.Spec.S3 = nil
@@ -74,6 +77,7 @@ func (harborcluster *HarborCluster) Default() { //nolint:funlen
 		harborcluster.Spec.Storage.Spec.MinIO = nil
 	case KindStorageMinIO:
 		harborcluster.Spec.Storage.Spec.Oss = nil
+		harborcluster.Spec.Storage.Spec.Obs = nil
 		harborcluster.Spec.Storage.Spec.Gcs = nil
 		harborcluster.Spec.Storage.Spec.Azure = nil
 		harborcluster.Spec.Storage.Spec.S3 = nil
@@ -81,6 +85,7 @@ func (harborcluster *HarborCluster) Default() { //nolint:funlen
 		harborcluster.Spec.Storage.Spec.FileSystem = nil
 	case KindStorageAzure:
 		harborcluster.Spec.Storage.Spec.Oss = nil
+		harborcluster.Spec.Storage.Spec.Obs = nil
 		harborcluster.Spec.Storage.Spec.Gcs = nil
 		harborcluster.Spec.Storage.Spec.S3 = nil
 		harborcluster.Spec.Storage.Spec.Swift = nil
@@ -88,6 +93,7 @@ func (harborcluster *HarborCluster) Default() { //nolint:funlen
 		harborcluster.Spec.Storage.Spec.MinIO = nil
 	case KindStorageGcs:
 		harborcluster.Spec.Storage.Spec.Oss = nil
+		harborcluster.Spec.Storage.Spec.Obs = nil
 		harborcluster.Spec.Storage.Spec.Azure = nil
 		harborcluster.Spec.Storage.Spec.S3 = nil
 		harborcluster.Spec.Storage.Spec.Swift = nil
@@ -95,6 +101,15 @@ func (harborcluster *HarborCluster) Default() { //nolint:funlen
 		harborcluster.Spec.Storage.Spec.MinIO = nil
 	case KindStorageOss:
 		harborcluster.Spec.Storage.Spec.Azure = nil
+		harborcluster.Spec.Storage.Spec.Obs = nil
+		harborcluster.Spec.Storage.Spec.S3 = nil
+		harborcluster.Spec.Storage.Spec.Swift = nil
+		harborcluster.Spec.Storage.Spec.FileSystem = nil
+		harborcluster.Spec.Storage.Spec.MinIO = nil
+		harborcluster.Spec.Storage.Spec.Gcs = nil
+	case KindStorageObs:
+		harborcluster.Spec.Storage.Spec.Azure = nil
+		harborcluster.Spec.Storage.Spec.Oss = nil
 		harborcluster.Spec.Storage.Spec.S3 = nil
 		harborcluster.Spec.Storage.Spec.Swift = nil
 		harborcluster.Spec.Storage.Spec.FileSystem = nil
@@ -197,6 +212,11 @@ func (harborcluster *HarborCluster) validateStorage() *field.Error { //nolint:fu
 	if harborcluster.Spec.Storage.Kind == KindStorageS3 && harborcluster.Spec.Storage.Spec.S3 == nil {
 		// Invalid and not acceptable
 		return required(fp.Child("s3"))
+	}
+
+	if harborcluster.Spec.Storage.Kind == KindStorageObs && harborcluster.Spec.Storage.Spec.Obs == nil {
+		// Invalid and not acceptable
+		return required(fp.Child("obs"))
 	}
 
 	if harborcluster.Spec.Storage.Kind == KindStorageMinIO && harborcluster.Spec.Storage.Spec.MinIO == nil {

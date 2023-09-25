@@ -164,6 +164,34 @@ type ChartMuseumChartStorageDriverSpec struct {
 
 	// +kubebuilder:validation:Optional
 	Oss *ChartMuseumChartStorageDriverOssSpec `json:"oss,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	Obs *ChartMuseumChartStorageDriverObsSpec `json:"obs,omitempty"`
+}
+
+type ChartMuseumChartStorageDriverObsSpec struct {
+	// +kubebuilder:validation:Required
+	// S3 bucket to store charts for amazon storage
+	Bucket string `json:"bucket"`
+
+	// +kubebuilder:validation:Optional
+	// Alternative s3 endpoint
+	Endpoint string `json:"endpoint,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	// Region of the bucket
+	Region string `json:"region,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	// ServerSideEncryption is the algorithm for server side encryption
+	ServerSideEncryption string `json:"serverSideEncryption,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	AccessKeyID string `json:"accessKeyID,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Pattern="[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*"
+	AccessSecretRef string `json:"accessSecretRef,omitempty"`
 }
 
 type ChartMuseumChartStorageDriverOssSpec struct {

@@ -524,6 +524,11 @@ type HarborStorageImageChartStorageSpec struct {
 	// An implementation of the storagedriver.StorageDriver interface which uses Alibaba Cloud for object storage.
 	// See https://docs.docker.com/registry/storage-drivers/oss/
 	Oss *HarborStorageImageChartStorageOssSpec `json:"oss,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	// An implementation of the storagedriver.StorageDriver interface which uses Huawei Cloud for object storage.
+	// See https://docs.docker.com/registry/storage-drivers/obs/
+	Obs *HarborStorageImageChartStorageObsSpec `json:"obs,omitempty"`
 }
 
 type HarborStorageJobServiceStorageSpec struct {
@@ -552,6 +557,7 @@ const (
 	AzureDriverName      = "azure"
 	GcsDriverName        = "gcs"
 	OssDriverName        = "oss"
+	ObsDriverName        = "obs"
 )
 
 func (r *HarborStorageImageChartStorageSpec) ProviderName() string {
@@ -573,6 +579,10 @@ func (r *HarborStorageImageChartStorageSpec) ProviderName() string {
 
 	if r.Oss != nil {
 		return OssDriverName
+	}
+
+	if r.Obs != nil {
+		return ObsDriverName
 	}
 
 	return FileSystemDriverName
@@ -606,6 +616,10 @@ func (r *HarborStorageImageChartStorageSpec) Validate() error {
 	}
 
 	if r.Oss != nil {
+		found++
+	}
+
+	if r.Obs != nil {
 		found++
 	}
 
@@ -699,6 +713,25 @@ func (r *HarborStorageImageChartStorageAzureSpec) ChartMuseum() *ChartMuseumChar
 
 func (r *HarborStorageImageChartStorageAzureSpec) Registry() *RegistryStorageDriverAzureSpec {
 	return &r.RegistryStorageDriverAzureSpec
+}
+
+type HarborStorageImageChartStorageObsSpec struct {
+	RegistryStorageDriverObsSpec `json:",inline"`
+}
+
+func (r *HarborStorageImageChartStorageObsSpec) ChartMuseum() *ChartMuseumChartStorageDriverObsSpec {
+	return &ChartMuseumChartStorageDriverObsSpec{
+		AccessKeyID:     r.AccessKey,
+		AccessSecretRef: r.SecretKeyRef,
+		Bucket:          r.Bucket,
+		Endpoint:        r.RegionEndpoint,
+		Prefix:          r.RootDirectory,
+		Region:          r.Region,
+	}
+}
+
+func (r *HarborStorageImageChartStorageObsSpec) Registry() *RegistryStorageDriverObsSpec {
+	return &r.RegistryStorageDriverObsSpec
 }
 
 type HarborStorageImageChartStorageS3Spec struct {

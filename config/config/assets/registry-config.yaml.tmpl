@@ -138,6 +138,43 @@ storage:
     {{- end }}
   {{- end }}
 
+  {{- if .Spec.Storage.Driver.Obs }}
+  obs:
+    region: {{ .Spec.Storage.Driver.Obs.Region | quote }}
+    bucket: {{ .Spec.Storage.Driver.Obs.Bucket | quote }}
+    encrypt: {{ .Spec.Storage.Driver.Obs.Encrypt }}
+    {{- if .Spec.Storage.Driver.Obs.KeyID }}
+    keyid: {{ .Spec.Storage.Driver.Obs.KeyID | quote }}
+    {{- end }}
+    {{- if .Spec.Storage.Driver.Obs.ChunkSize }}
+    chunksize: {{ .Spec.Storage.Driver.Obs.ChunkSize }}
+    {{- end }}
+    {{- if .Spec.Storage.Driver.Obs.StorageClass }}
+    storageclass: {{ .Spec.Storage.Driver.Obs.StorageClass | quote }}
+    {{- end }}
+    {{- if .Spec.Storage.Driver.Obs.RootDirectory }}
+    rootdirectory: {{ .Spec.Storage.Driver.Obs.RootDirectory | quote }}
+    {{- end }}
+    {{- if .Spec.Storage.Driver.Obs.AccessKey }}
+    accesskey: {{ .Spec.Storage.Driver.Obs.AccessKey | quote }}
+    {{- end }}
+    {{- if .Spec.Storage.Driver.Obs.SecretKeyRef }}
+    # secretkey: setted through environment variable
+    {{- end }}
+    {{- if .Spec.Storage.Driver.Obs.Endpoint }}
+    endpoint: {{ .Spec.Storage.Driver.Obs.Endpoint | quote }}
+    {{- end }}
+    {{- if .Spec.Storage.Driver.Obs.MultipartCopyChunkSize }}
+    multipartcopychunksize: {{ .Spec.Storage.Driver.Obs.MultipartCopyChunkSize | quote }}
+    {{- end }}
+    {{- if .Spec.Storage.Driver.Obs.MultipartCopyMaxConcurrency }}
+    multipartcopymaxconcurrency: {{ .Spec.Storage.Driver.Obs.MultipartCopyMaxConcurrency | quote }}
+    {{- end }}
+    {{- if .Spec.Storage.Driver.Obs.MultipartCopyThresholdSize }}
+    multipartcopythresholdsize: {{ .Spec.Storage.Driver.Obs.MultipartCopyThresholdSize | quote }}
+    {{- end }}
+  {{- end }}
+
   {{- if .Spec.Storage.Driver.Azure }}
   azure:
     accountname: {{ .Spec.Storage.Driver.Azure.AccountName | quote }}

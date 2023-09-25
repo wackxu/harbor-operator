@@ -518,6 +518,26 @@ func (r *Reconciler) ApplyS3StorageEnvs(ctx context.Context, registry *goharborv
 	return nil
 }
 
+func (r *Reconciler) ApplyObsStorageEnvs(ctx context.Context, registry *goharborv1.Registry, deploy *appsv1.Deployment) error {
+	regContainer := &deploy.Spec.Template.Spec.Containers[registryContainerIndex]
+
+	if registry.Spec.Storage.Driver.Obs.SecretKeyRef != "" {
+		regContainer.Env = append(regContainer.Env, corev1.EnvVar{
+			Name: "REGISTRY_STORAGE_OBS_SECRETKEY",
+			ValueFrom: &corev1.EnvVarSource{
+				SecretKeyRef: &corev1.SecretKeySelector{
+					Key: harbormetav1.SharedSecretKey,
+					LocalObjectReference: corev1.LocalObjectReference{
+						Name: registry.Spec.Storage.Driver.Obs.SecretKeyRef,
+					},
+				},
+			},
+		})
+	}
+
+	return nil
+}
+
 func (r *Reconciler) ApplySwiftStorageEnvs(ctx context.Context, registry *goharborv1.Registry, deploy *appsv1.Deployment) error {
 	regContainer := &deploy.Spec.Template.Spec.Containers[registryContainerIndex]
 
@@ -628,6 +648,10 @@ func (r *Reconciler) ApplyStorageConfiguration(ctx context.Context, registry *go
 
 	if registry.Spec.Storage.Driver.Oss != nil {
 		return r.ApplyOssStorageEnvs(ctx, registry, deploy)
+	}
+
+	if registry.Spec.Storage.Driver.Obs != nil {
+		return r.ApplyObsStorageEnvs(ctx, registry, deploy)
 	}
 
 	if registry.Spec.Storage.Driver.Gcs != nil {

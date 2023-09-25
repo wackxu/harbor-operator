@@ -627,6 +627,11 @@ type RegistryStorageDriverSpec struct {
 	// An implementation of the storagedriver.StorageDriver interface which uses Alibaba Cloud for object storage.
 	// https://docs.docker.com/registry/storage-drivers/oss/
 	Oss *RegistryStorageDriverOssSpec `json:"oss,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	// An implementation of the storagedriver.StorageDriver interface which uses Huawei Cloud for object storage.
+	// https://docs.docker.com/registry/storage-drivers/obs/
+	Obs *RegistryStorageDriverObsSpec `json:"obs,omitempty"`
 }
 
 func (r *RegistryStorageDriverSpec) Validate() error {
@@ -657,6 +662,10 @@ func (r *RegistryStorageDriverSpec) Validate() error {
 	}
 
 	if r.Oss != nil {
+		found++
+	}
+
+	if r.Obs != nil {
 		found++
 	}
 
@@ -959,6 +968,59 @@ type RegistryStorageMaintenanceUploadPurgingSpec struct {
 	// +kubebuilder:validation:Pattern="([0-9]+h)?([0-9]+m)?([0-9]+s)?([0-9]+ms)?([0-9]+us)?([0-9]+µs)?([0-9]+ns)?"
 	// +kubebuilder:default="24h"
 	Interval *metav1.Duration `json:"interval,omitempty"`
+}
+
+type RegistryStorageDriverObsSpec struct {
+	// +kubebuilder:validation:Optional
+	// The AWS Access Key.
+	// If you use IAM roles, omit to fetch temporary credentials from IAM.
+	AccessKey string `json:"accesskey,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Pattern="[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*"
+	// Reference to the secret containing the AWS Secret Key.
+	// If you use IAM roles, omit to fetch temporary credentials from IAM.
+	SecretKeyRef string `json:"secretkeyRef,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	// Endpoint for S3 compatible storage services (Minio, etc).
+	Endpoint string `json:"endpoint,omitempty"`
+
+	// +kubebuilder:validation:Required
+	// The bucket name in which you want to store the registry’s data.
+	Bucket string `json:"bucket"`
+
+	// +kubebuilder:validation:Optional
+	// This is a prefix that is applied to all S3 keys to allow you to segment data in your bucket if necessary.
+	RootDirectory string `json:"rootdirectory,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default="STANDARD"
+	// The S3 storage class applied to each registry file.
+	StorageClass string `json:"storageclass,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	// KMS key ID to use for encryption (encrypt must be true, or this parameter is ignored).
+	KeyID string `json:"keyid,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default=false
+	// Specifies whether the registry stores the image in encrypted format or not. A boolean value.
+	Encrypt bool `json:"encrypt"`
+
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Minimum=5242880
+	// The S3 API requires multipart upload chunks to be at least 5MB.
+	ChunkSize int64 `json:"chunksize,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	MultipartCopyChunkSize int64 `json:"multipartcopychunksize,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	MultipartCopyMaxConcurrency int64 `json:"multipartcopymaxconcurrency,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	MultipartCopyThresholdSize int64 `json:"multipartcopythresholdsize,omitempty"`
 }
 
 type RegistryStorageDeleteSpec struct {

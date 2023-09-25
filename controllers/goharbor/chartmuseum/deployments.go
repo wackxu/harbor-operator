@@ -264,6 +264,42 @@ func (r *Reconciler) GetDeployment(ctx context.Context, chartMuseum *goharborv1.
 		}
 	}
 
+	//if chartMuseum.Spec.Chart.Storage.Obs != nil {
+	//	envs = append(envs, corev1.EnvVar{
+	//		Name:  "STORAGE",
+	//		Value: "huawei",
+	//	}, corev1.EnvVar{
+	//		Name:  "AWS_ACCESS_KEY_ID",
+	//		Value: chartMuseum.Spec.Chart.Storage.Obs.AccessKeyID,
+	//	}, corev1.EnvVar{
+	//		Name:  "STORAGE_AMAZON_BUCKET",
+	//		Value: chartMuseum.Spec.Chart.Storage.Obs.Bucket,
+	//	}, corev1.EnvVar{
+	//		Name:  "STORAGE_AMAZON_PREFIX",
+	//		Value: getChartFolder(chartMuseum.Spec.Chart.Storage.Obs.Prefix),
+	//	}, corev1.EnvVar{
+	//		Name:  "STORAGE_AMAZON_REGION",
+	//		Value: chartMuseum.Spec.Chart.Storage.Obs.Region,
+	//	}, corev1.EnvVar{
+	//		Name:  "STORAGE_AMAZON_ENDPOINT",
+	//		Value: chartMuseum.Spec.Chart.Storage.Obs.Endpoint,
+	//	})
+	//
+	//	if chartMuseum.Spec.Chart.Storage.Amazon.AccessSecretRef != "" {
+	//		envs = append(envs, corev1.EnvVar{
+	//			Name: "AWS_SECRET_ACCESS_KEY",
+	//			ValueFrom: &corev1.EnvVarSource{
+	//				SecretKeyRef: &corev1.SecretKeySelector{
+	//					LocalObjectReference: corev1.LocalObjectReference{
+	//						Name: chartMuseum.Spec.Chart.Storage.Amazon.AccessSecretRef,
+	//					},
+	//					Key: harbormetav1.SharedSecretKey,
+	//				},
+	//			},
+	//		})
+	//	}
+	//}
+
 	if chartMuseum.Spec.Chart.Storage.OpenStack != nil {
 		envs = append(envs, corev1.EnvVar{
 			Name:  "STORAGE",

@@ -179,8 +179,8 @@ type ChartMuseumChartStorageDriverObsSpec struct {
 	Endpoint string `json:"endpoint,omitempty"`
 
 	// +kubebuilder:validation:Optional
-	// Region of the bucket
-	Region string `json:"region,omitempty"`
+	// Prefix to store charts for the bucket
+	Prefix string `json:"prefix,omitempty"`
 
 	// +kubebuilder:validation:Optional
 	// ServerSideEncryption is the algorithm for server side encryption

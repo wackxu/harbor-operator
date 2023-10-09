@@ -724,9 +724,8 @@ func (r *HarborStorageImageChartStorageObsSpec) ChartMuseum() *ChartMuseumChartS
 		AccessKeyID:     r.AccessKey,
 		AccessSecretRef: r.SecretKeyRef,
 		Bucket:          r.Bucket,
-		Endpoint:        r.RegionEndpoint,
+		Endpoint:        r.Endpoint,
 		Prefix:          r.RootDirectory,
-		Region:          r.Region,
 	}
 }
 

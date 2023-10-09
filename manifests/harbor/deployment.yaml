@@ -4263,6 +4263,29 @@ spec:
                         format: int64
                         minimum: 0
                         type: integer
+                      obs:
+                        properties:
+                          accessKeyID:
+                            type: string
+                          accessSecretRef:
+                            pattern: '[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*'
+                            type: string
+                          bucket:
+                            description: S3 bucket to store charts for amazon storage
+                            type: string
+                          endpoint:
+                            description: Alternative s3 endpoint
+                            type: string
+                          region:
+                            description: Region of the bucket
+                            type: string
+                          serverSideEncryption:
+                            description: ServerSideEncryption is the algorithm for
+                              server side encryption
+                            type: string
+                        required:
+                        - bucket
+                        type: object
                       openstack:
                         properties:
                           authenticationURL:
@@ -11652,6 +11675,7 @@ spec:
                     - Azure
                     - Gcs
                     - Oss
+                    - Obs
                     type: string
                   spec:
                     description: the spec of Storage.
@@ -12265,6 +12289,63 @@ spec:
                         - operatorVersion
                         - replicas
                         - volumesPerServer
+                        type: object
+                      obs:
+                        properties:
+                          accesskey:
+                            description: The AWS Access Key. If you use IAM roles,
+                              omit to fetch temporary credentials from IAM.
+                            type: string
+                          bucket:
+                            description: The bucket name in which you want to store
+                              the registry’s data.
+                            type: string
+                          chunksize:
+                            description: The S3 API requires multipart upload chunks
+                              to be at least 5MB.
+                            format: int64
+                            minimum: 5242880
+                            type: integer
+                          encrypt:
+                            default: false
+                            description: Specifies whether the registry stores the
+                              image in encrypted format or not. A boolean value.
+                            type: boolean
+                          endpoint:
+                            description: Endpoint for S3 compatible storage services
+                              (Minio, etc).
+                            type: string
+                          keyid:
+                            description: KMS key ID to use for encryption (encrypt
+                              must be true, or this parameter is ignored).
+                            type: string
+                          multipartcopychunksize:
+                            format: int64
+                            type: integer
+                          multipartcopymaxconcurrency:
+                            format: int64
+                            type: integer
+                          multipartcopythresholdsize:
+                            format: int64
+                            type: integer
+                          rootdirectory:
+                            description: This is a prefix that is applied to all S3
+                              keys to allow you to segment data in your bucket if
+                              necessary.
+                            type: string
+                          secretkeyRef:
+                            description: Reference to the secret containing the AWS
+                              Secret Key. If you use IAM roles, omit to fetch temporary
+                              credentials from IAM.
+                            pattern: '[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*'
+                            type: string
+                          storageclass:
+                            default: STANDARD
+                            description: The S3 storage class applied to each registry
+                              file.
+                            type: string
+                        required:
+                        - bucket
                         type: object
                       oss:
                         properties:
@@ -16537,6 +16618,64 @@ spec:
                         type: string
                       pathPrefix:
                         type: string
+                    type: object
+                  obs:
+                    description: An implementation of the storagedriver.StorageDriver
+                      interface which uses Huawei Cloud for object storage. See https://docs.docker.com/registry/storage-drivers/obs/
+                    properties:
+                      accesskey:
+                        description: The AWS Access Key. If you use IAM roles, omit
+                          to fetch temporary credentials from IAM.
+                        type: string
+                      bucket:
+                        description: The bucket name in which you want to store the
+                          registry’s data.
+                        type: string
+                      chunksize:
+                        description: The S3 API requires multipart upload chunks to
+                          be at least 5MB.
+                        format: int64
+                        minimum: 5242880
+                        type: integer
+                      encrypt:
+                        default: false
+                        description: Specifies whether the registry stores the image
+                          in encrypted format or not. A boolean value.
+                        type: boolean
+                      endpoint:
+                        description: Endpoint for S3 compatible storage services (Minio,
+                          etc).
+                        type: string
+                      keyid:
+                        description: KMS key ID to use for encryption (encrypt must
+                          be true, or this parameter is ignored).
+                        type: string
+                      multipartcopychunksize:
+                        format: int64
+                        type: integer
+                      multipartcopymaxconcurrency:
+                        format: int64
+                        type: integer
+                      multipartcopythresholdsize:
+                        format: int64
+                        type: integer
+                      rootdirectory:
+                        description: This is a prefix that is applied to all S3 keys
+                          to allow you to segment data in your bucket if necessary.
+                        type: string
+                      secretkeyRef:
+                        description: Reference to the secret containing the AWS Secret
+                          Key. If you use IAM roles, omit to fetch temporary credentials
+                          from IAM.
+                        pattern: '[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*'
+                        type: string
+                      storageclass:
+                        default: STANDARD
+                        description: The S3 storage class applied to each registry
+                          file.
+                        type: string
+                    required:
+                    - bucket
                     type: object
                   oss:
                     description: An implementation of the storagedriver.StorageDriver
@@ -35160,6 +35299,65 @@ spec:
                           is only suitable for testing. Never use this driver in production.
                           See: https://docs.docker.com/registry/storage-drivers/inmemory/'
                         type: object
+                      obs:
+                        description: An implementation of the storagedriver.StorageDriver
+                          interface which uses Huawei Cloud for object storage. https://docs.docker.com/registry/storage-drivers/obs/
+                        properties:
+                          accesskey:
+                            description: The AWS Access Key. If you use IAM roles,
+                              omit to fetch temporary credentials from IAM.
+                            type: string
+                          bucket:
+                            description: The bucket name in which you want to store
+                              the registry’s data.
+                            type: string
+                          chunksize:
+                            description: The S3 API requires multipart upload chunks
+                              to be at least 5MB.
+                            format: int64
+                            minimum: 5242880
+                            type: integer
+                          encrypt:
+                            default: false
+                            description: Specifies whether the registry stores the
+                              image in encrypted format or not. A boolean value.
+                            type: boolean
+                          endpoint:
+                            description: Endpoint for S3 compatible storage services
+                              (Minio, etc).
+                            type: string
+                          keyid:
+                            description: KMS key ID to use for encryption (encrypt
+                              must be true, or this parameter is ignored).
+                            type: string
+                          multipartcopychunksize:
+                            format: int64
+                            type: integer
+                          multipartcopymaxconcurrency:
+                            format: int64
+                            type: integer
+                          multipartcopythresholdsize:
+                            format: int64
+                            type: integer
+                          rootdirectory:
+                            description: This is a prefix that is applied to all S3
+                              keys to allow you to segment data in your bucket if
+                              necessary.
+                            type: string
+                          secretkeyRef:
+                            description: Reference to the secret containing the AWS
+                              Secret Key. If you use IAM roles, omit to fetch temporary
+                              credentials from IAM.
+                            pattern: '[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*'
+                            type: string
+                          storageclass:
+                            default: STANDARD
+                            description: The S3 storage class applied to each registry
+                              file.
+                            type: string
+                        required:
+                        - bucket
+                        type: object
                       oss:
                         description: An implementation of the storagedriver.StorageDriver
                           interface which uses Alibaba Cloud for object storage. https://docs.docker.com/registry/storage-drivers/oss/
@@ -45029,6 +45227,25 @@ data:
     }}\n    multipartcopymaxconcurrency: {{ .Spec.Storage.Driver.S3.MultipartCopyMaxConcurrency
     | quote }}\n    {{- end }}\n    {{- if .Spec.Storage.Driver.S3.MultipartCopyThresholdSize
     }}\n    multipartcopythresholdsize: {{ .Spec.Storage.Driver.S3.MultipartCopyThresholdSize
+    | quote }}\n    {{- end }}\n  {{- end }}\n\n  {{- if .Spec.Storage.Driver.Obs
+    }}\n  obs:\n    region: {{ .Spec.Storage.Driver.Obs.Region | quote }}\n    bucket:
+    {{ .Spec.Storage.Driver.Obs.Bucket | quote }}\n    encrypt: {{ .Spec.Storage.Driver.Obs.Encrypt
+    }}\n    {{- if .Spec.Storage.Driver.Obs.KeyID }}\n    keyid: {{ .Spec.Storage.Driver.Obs.KeyID
+    | quote }}\n    {{- end }}\n    {{- if .Spec.Storage.Driver.Obs.ChunkSize }}\n
+    \   chunksize: {{ .Spec.Storage.Driver.Obs.ChunkSize }}\n    {{- end }}\n    {{-
+    if .Spec.Storage.Driver.Obs.StorageClass }}\n    storageclass: {{ .Spec.Storage.Driver.Obs.StorageClass
+    | quote }}\n    {{- end }}\n    {{- if .Spec.Storage.Driver.Obs.RootDirectory
+    }}\n    rootdirectory: {{ .Spec.Storage.Driver.Obs.RootDirectory | quote }}\n
+    \   {{- end }}\n    {{- if .Spec.Storage.Driver.Obs.AccessKey }}\n    accesskey:
+    {{ .Spec.Storage.Driver.Obs.AccessKey | quote }}\n    {{- end }}\n    {{- if .Spec.Storage.Driver.Obs.SecretKeyRef
+    }}\n    # secretkey: setted through environment variable\n    {{- end }}\n    {{-
+    if .Spec.Storage.Driver.Obs.Endpoint }}\n    endpoint: {{ .Spec.Storage.Driver.Obs.Endpoint
+    | quote }}\n    {{- end }}\n    {{- if .Spec.Storage.Driver.Obs.MultipartCopyChunkSize
+    }}\n    multipartcopychunksize: {{ .Spec.Storage.Driver.Obs.MultipartCopyChunkSize
+    | quote }}\n    {{- end }}\n    {{- if .Spec.Storage.Driver.Obs.MultipartCopyMaxConcurrency
+    }}\n    multipartcopymaxconcurrency: {{ .Spec.Storage.Driver.Obs.MultipartCopyMaxConcurrency
+    | quote }}\n    {{- end }}\n    {{- if .Spec.Storage.Driver.Obs.MultipartCopyThresholdSize
+    }}\n    multipartcopythresholdsize: {{ .Spec.Storage.Driver.Obs.MultipartCopyThresholdSize
     | quote }}\n    {{- end }}\n  {{- end }}\n\n  {{- if .Spec.Storage.Driver.Azure
     }}\n  azure:\n    accountname: {{ .Spec.Storage.Driver.Azure.AccountName | quote
     }}\n    container: {{ .Spec.Storage.Driver.Azure.Container | quote }}\n    realm:
